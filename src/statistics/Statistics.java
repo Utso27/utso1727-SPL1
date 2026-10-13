@@ -2,34 +2,64 @@ package statistics;
 
 import model.Student;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class Statistics {
 
-    private static final DecimalFormat df =
-            new DecimalFormat("0.00");
+    // ---------------------------------------------------------
+    // Count Dropout Students
+    // ---------------------------------------------------------
+    public int countDropoutStudents(ArrayList<Student> students) {
 
-
-    // Average previous qualification grade
-    public double calculateMeanPreviousQualificationGrade(
-            ArrayList<Student> students) {
-
-        if (students.isEmpty()) {
-            return 0;
-        }
-
-        double sum = 0;
+        int count = 0;
 
         for (Student s : students) {
-            sum += s.getPreviousQualificationGrade();
+            if (s.getTarget().equalsIgnoreCase("Dropout")) {
+                count++;
+            }
         }
 
-        return sum / students.size();
+        return count;
     }
 
 
-    // Average admission grade
+    // ---------------------------------------------------------
+    // Count Enrolled Students
+    // ---------------------------------------------------------
+    public int countEnrolledStudents(ArrayList<Student> students) {
+
+        int count = 0;
+
+        for (Student s : students) {
+            if (s.getTarget().equalsIgnoreCase("Enrolled")) {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+
+    // ---------------------------------------------------------
+    // Count Graduate Students
+    // ---------------------------------------------------------
+    public int countGraduateStudents(ArrayList<Student> students) {
+
+        int count = 0;
+
+        for (Student s : students) {
+            if (s.getTarget().equalsIgnoreCase("Graduate")) {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+
+    // ---------------------------------------------------------
+    // Mean Admission Grade
+    // ---------------------------------------------------------
     public double calculateMeanAdmissionGrade(
             ArrayList<Student> students) {
 
@@ -47,7 +77,29 @@ public class Statistics {
     }
 
 
-    // Average first semester grade
+    // ---------------------------------------------------------
+    // Mean Age at Enrollment
+    // ---------------------------------------------------------
+    public double calculateMeanAge(
+            ArrayList<Student> students) {
+
+        if (students.isEmpty()) {
+            return 0;
+        }
+
+        double sum = 0;
+
+        for (Student s : students) {
+            sum += s.getAgeAtEnrollment();
+        }
+
+        return sum / students.size();
+    }
+
+
+    // ---------------------------------------------------------
+    // Mean First Semester Grade
+    // ---------------------------------------------------------
     public double calculateMeanFirstSemesterGrade(
             ArrayList<Student> students) {
 
@@ -58,14 +110,16 @@ public class Statistics {
         double sum = 0;
 
         for (Student s : students) {
-            sum += s.getFirstSemGrade();
+            sum += s.getCurricularUnits1stSemGrade();
         }
 
         return sum / students.size();
     }
 
 
-    // Average second semester grade
+    // ---------------------------------------------------------
+    // Mean Second Semester Grade
+    // ---------------------------------------------------------
     public double calculateMeanSecondSemesterGrade(
             ArrayList<Student> students) {
 
@@ -76,14 +130,16 @@ public class Statistics {
         double sum = 0;
 
         for (Student s : students) {
-            sum += s.getSecondSemGrade();
+            sum += s.getCurricularUnits2ndSemGrade();
         }
 
         return sum / students.size();
     }
 
 
-    // Standard deviation of first semester grade
+    // ---------------------------------------------------------
+    // First Semester Grade Standard Deviation
+    // ---------------------------------------------------------
     public double standardDeviationFirstSemesterGrade(
             ArrayList<Student> students) {
 
@@ -91,15 +147,13 @@ public class Statistics {
             return 0;
         }
 
-        double mean =
-                calculateMeanFirstSemesterGrade(students);
+        double mean = calculateMeanFirstSemesterGrade(students);
 
         double sum = 0;
 
         for (Student s : students) {
-
             sum += Math.pow(
-                    s.getFirstSemGrade() - mean,
+                    s.getCurricularUnits1stSemGrade() - mean,
                     2
             );
         }
@@ -108,7 +162,9 @@ public class Statistics {
     }
 
 
-    // Standard deviation of second semester grade
+    // ---------------------------------------------------------
+    // Second Semester Grade Standard Deviation
+    // ---------------------------------------------------------
     public double standardDeviationSecondSemesterGrade(
             ArrayList<Student> students) {
 
@@ -116,15 +172,13 @@ public class Statistics {
             return 0;
         }
 
-        double mean =
-                calculateMeanSecondSemesterGrade(students);
+        double mean = calculateMeanSecondSemesterGrade(students);
 
         double sum = 0;
 
         for (Student s : students) {
-
             sum += Math.pow(
-                    s.getSecondSemGrade() - mean,
+                    s.getCurricularUnits2ndSemGrade() - mean,
                     2
             );
         }
@@ -133,84 +187,94 @@ public class Statistics {
     }
 
 
-    // Count dropout students
-    public int countDropoutStudents(
+    // ---------------------------------------------------------
+    // Mean Approved Units - First Semester
+    // ---------------------------------------------------------
+    public double calculateMeanFirstSemesterApproved(
             ArrayList<Student> students) {
 
+        if (students.isEmpty()) {
+            return 0;
+        }
+
+        double sum = 0;
+
+        for (Student s : students) {
+            sum += s.getCurricularUnits1stSemApproved();
+        }
+
+        return sum / students.size();
+    }
+
+
+    // ---------------------------------------------------------
+    // Mean Approved Units - Second Semester
+    // ---------------------------------------------------------
+    public double calculateMeanSecondSemesterApproved(
+            ArrayList<Student> students) {
+
+        if (students.isEmpty()) {
+            return 0;
+        }
+
+        double sum = 0;
+
+        for (Student s : students) {
+            sum += s.getCurricularUnits2ndSemApproved();
+        }
+
+        return sum / students.size();
+    }
+
+
+    // ---------------------------------------------------------
+    // Dropout Average First Semester Grade
+    // ---------------------------------------------------------
+    public double dropoutAverageFirstSemesterGrade(
+            ArrayList<Student> students) {
+
+        double sum = 0;
         int count = 0;
 
         for (Student s : students) {
 
-            if (s.getDropout() == 1) {
+            if (s.getTarget().equalsIgnoreCase("Dropout")) {
+
+                sum += s.getCurricularUnits1stSemGrade();
                 count++;
             }
         }
 
-        return count;
+        if (count == 0) {
+            return 0;
+        }
+
+        return sum / count;
     }
 
 
-    // Count non-dropout students
-    public int countNonDropoutStudents(
+    // ---------------------------------------------------------
+    // Non-Dropout Average First Semester Grade
+    // ---------------------------------------------------------
+    public double nonDropoutAverageFirstSemesterGrade(
             ArrayList<Student> students) {
 
+        double sum = 0;
         int count = 0;
 
         for (Student s : students) {
 
-            if (s.getDropout() == 0) {
+            if (!s.getTarget().equalsIgnoreCase("Dropout")) {
+
+                sum += s.getCurricularUnits1stSemGrade();
                 count++;
             }
         }
 
-        return count;
-    }
-
-
-    // Compare dropout and non-dropout students
-    // using first semester grade
-    public void dropoutComparison(
-            ArrayList<Student> students) {
-
-        double dropoutGrade = 0;
-        double nonDropoutGrade = 0;
-
-        int dropoutCount = 0;
-        int nonDropoutCount = 0;
-
-
-        for (Student s : students) {
-
-            if (s.getDropout() == 1) {
-
-                dropoutGrade +=
-                        s.getFirstSemGrade();
-
-                dropoutCount++;
-
-            } else {
-
-                nonDropoutGrade +=
-                        s.getFirstSemGrade();
-
-                nonDropoutCount++;
-            }
+        if (count == 0) {
+            return 0;
         }
 
-
-        System.out.println(
-                "Dropout Student Average 1st Semester Grade: "
-                        + df.format(
-                        dropoutGrade / dropoutCount
-                )
-        );
-
-
-        System.out.println(
-                "Non-Dropout Student Average 1st Semester Grade: "
-                        + df.format(
-                        nonDropoutGrade / nonDropoutCount
-                )
-        );
+        return sum / count;
     }
 }

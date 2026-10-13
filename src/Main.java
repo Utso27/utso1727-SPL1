@@ -1,103 +1,182 @@
 import data.CSVReader;
 import model.Student;
 import statistics.Statistics;
-import java.text.DecimalFormat;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-
 public class Main {
-    static DecimalFormat df = new DecimalFormat("0.00");
-
 
     public static void main(String[] args) {
 
-
-        CSVReader reader = new CSVReader();
-
+        String filePath = "data/students.csv";
 
         ArrayList<Student> students =
-                reader.readStudents("data/students.csv");
+                CSVReader.readStudents(filePath);
 
-
-
-        System.out.println(
-                "University Student Dropout Early Warning System"
-        );
-
-
-        System.out.println("--------------------------------");
-
-
-        System.out.println(
-                "Total Students: "
-                        + students.size()
-        );
-
-
+        DecimalFormat df = new DecimalFormat("0.00");
 
         Statistics statistics = new Statistics();
 
-        System.out.println();
-        System.out.println("STATISTICAL ANALYSIS");
-        System.out.println("------------------------------");
 
-        System.out.println(
-                "Total Students: "
-                        + students.size()
-        );
-
-        System.out.println(
-                "Dropout Students: "
-                        + statistics.countDropoutStudents(students)
-        );
-
-        System.out.println(
-                "Non-Dropout Students: "
-                        + statistics.countNonDropoutStudents(students)
-        );
+        // =====================================================
+        // PROJECT TITLE
+        // =====================================================
 
         System.out.println();
+        System.out.println("==============================================");
+        System.out.println(" UNIVERSITY STUDENT DROPOUT EARLY WARNING SYSTEM");
+        System.out.println("==============================================");
+
+
+        // =====================================================
+        // DATASET INFORMATION
+        // =====================================================
+
+        System.out.println();
+        System.out.println("DATASET INFORMATION");
+        System.out.println("-------------------");
 
         System.out.println(
-                "Average Previous Qualification Grade: "
-                        + statistics.calculateMeanPreviousQualificationGrade(students)
+                "Total Students: " + students.size()
+        );
+
+
+        // =====================================================
+        // TARGET DISTRIBUTION
+        // =====================================================
+
+        int dropout =
+                statistics.countDropoutStudents(students);
+
+        int enrolled =
+                statistics.countEnrolledStudents(students);
+
+        int graduate =
+                statistics.countGraduateStudents(students);
+
+        System.out.println();
+        System.out.println("TARGET DISTRIBUTION");
+        System.out.println("-------------------");
+
+        System.out.println("Dropout  : " + dropout);
+        System.out.println("Enrolled : " + enrolled);
+        System.out.println("Graduate : " + graduate);
+
+
+        // =====================================================
+        // GENERAL STATISTICS
+        // =====================================================
+
+        System.out.println();
+        System.out.println("GENERAL STATISTICS");
+        System.out.println("------------------");
+
+        System.out.println(
+                "Average Age at Enrollment: "
+                        + df.format(
+                        statistics.calculateMeanAge(students)
+                )
         );
 
         System.out.println(
                 "Average Admission Grade: "
-                        + statistics.calculateMeanAdmissionGrade(students)
+                        + df.format(
+                        statistics.calculateMeanAdmissionGrade(students)
+                )
         );
 
-        System.out.println(
-                "Average 1st Semester Grade: "
-                        + statistics.calculateMeanFirstSemesterGrade(students)
-        );
 
-        System.out.println(
-                "Average 2nd Semester Grade: "
-                        + statistics.calculateMeanSecondSemesterGrade(students)
-        );
+        // =====================================================
+        // FIRST SEMESTER
+        // =====================================================
 
         System.out.println();
+        System.out.println("FIRST SEMESTER ANALYSIS");
+        System.out.println("-----------------------");
 
         System.out.println(
-                "1st Semester Grade Standard Deviation: "
-                        + statistics.standardDeviationFirstSemesterGrade(students)
+                "Average Grade: "
+                        + df.format(
+                        statistics.calculateMeanFirstSemesterGrade(students)
+                )
         );
 
         System.out.println(
-                "2nd Semester Grade Standard Deviation: "
-                        + statistics.standardDeviationSecondSemesterGrade(students)
+                "Grade Standard Deviation: "
+                        + df.format(
+                        statistics.standardDeviationFirstSemesterGrade(students)
+                )
         );
+
+        System.out.println(
+                "Average Approved Units: "
+                        + df.format(
+                        statistics.calculateMeanFirstSemesterApproved(students)
+                )
+        );
+
+
+        // =====================================================
+        // SECOND SEMESTER
+        // =====================================================
 
         System.out.println();
+        System.out.println("SECOND SEMESTER ANALYSIS");
+        System.out.println("------------------------");
 
-        System.out.println("Comparison:");
-        statistics.dropoutComparison(students);
+        System.out.println(
+                "Average Grade: "
+                        + df.format(
+                        statistics.calculateMeanSecondSemesterGrade(students)
+                )
+        );
+
+        System.out.println(
+                "Grade Standard Deviation: "
+                        + df.format(
+                        statistics.standardDeviationSecondSemesterGrade(students)
+                )
+        );
+
+        System.out.println(
+                "Average Approved Units: "
+                        + df.format(
+                        statistics.calculateMeanSecondSemesterApproved(students)
+                )
+        );
 
 
+        // =====================================================
+        // DROPOUT COMPARISON
+        // =====================================================
 
+        System.out.println();
+        System.out.println("DROPOUT COMPARISON");
+        System.out.println("------------------");
+
+        System.out.println(
+                "Dropout Average 1st Semester Grade: "
+                        + df.format(
+                        statistics.dropoutAverageFirstSemesterGrade(students)
+                )
+        );
+
+        System.out.println(
+                "Non-Dropout Average 1st Semester Grade: "
+                        + df.format(
+                        statistics.nonDropoutAverageFirstSemesterGrade(students)
+                )
+        );
+
+
+        // =====================================================
+        // COMPLETION
+        // =====================================================
+
+        System.out.println();
+        System.out.println("==============================================");
+        System.out.println(" STATISTICAL ANALYSIS COMPLETED");
+        System.out.println("==============================================");
     }
-
 }
